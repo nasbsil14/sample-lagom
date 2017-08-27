@@ -8,10 +8,6 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.2.5" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % Test
 
 lazy val `hello-lagom` = (project in file("."))
-  //  .enablePlugins(JavaAppPackaging)
-  //  .enablePlugins(JavaServerAppPackaging)
-  //  .settings(mainClass in Compile := Some("com.example.hello"))
-  //  .enablePlugins(SystemdPlugin)
   .aggregate(`hello-lagom-api`, `hello-lagom-impl`, `hello-lagom-stream-api`, `hello-lagom-stream-impl`)
 
 lazy val `hello-lagom-api` = (project in file("hello-lagom-api"))
@@ -53,21 +49,3 @@ lazy val `hello-lagom-stream-impl` = (project in file("hello-lagom-stream-impl")
   )
   .dependsOn(`hello-lagom-stream-api`, `hello-lagom-api`)
 
-
-// ************** settings ******************* //
-//lagomServiceGatewayPort in ThisBuild := 8080
-//lagomServiceLocatorPort in ThisBuild := 9001
-
-//lagomCassandraEnabled in ThisBuild := false
-//lagomUnmanagedServices in ThisBuild := Map("cas_native" -> "http://192.168.0.2:9042")
-//lagomCassandraPort in ThisBuild := 9042
-//lagomCassandraCleanOnStart in ThisBuild := true
-
-//lagomKafkaEnabled in ThisBuild := false
-//lagomKafkaAddress in ThisBuild := "192.168.0.2:9092"
-//lagomKafkaPort in ThisBuild := 9092
-//lagomKafkaPropertiesFile in ThisBuild :=
-// Some((baseDirectory in ThisBuild).value / "project" / "kafka-server.properties")
-
-//lagomKafkaZookeperPort in ThisBuild := 9999
-//lagomServicesPortRange in ThisBuild := PortRange(40000, 45000)
