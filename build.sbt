@@ -8,7 +8,7 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.2.5" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % Test
 
 lazy val `hello-lagom` = (project in file("."))
-  //  .enablePlugins(JavaAppPackaging)
+    .enablePlugins(JavaAppPackaging)
   //  .enablePlugins(JavaServerAppPackaging)
   //  .settings(mainClass in Compile := Some("com.example.hello"))
   //  .enablePlugins(SystemdPlugin)
@@ -17,7 +17,8 @@ lazy val `hello-lagom` = (project in file("."))
 lazy val `hello-lagom-api` = (project in file("hello-lagom-api"))
   .settings(
     libraryDependencies ++= Seq(
-      lagomScaladslApi
+      lagomScaladslApi,
+      lagomJavadslServer
     )
   )
 
@@ -33,6 +34,16 @@ lazy val `hello-lagom-impl` = (project in file("hello-lagom-impl"))
     )
   )
   .settings(lagomForkedTestSettings: _*)
+  .settings(
+    bashScriptExtraDefines ++= Seq(
+      """addJava "-Dconfig.file=${app_home}/../conf/application.conf""""
+      //      ,"""addApp "--port=8080""""
+    ),
+    resourceDirectory in Compile := baseDirectory.value / "src/main/resources",
+    mappings in Universal += {
+      ((resourceDirectory in Compile).value / "application.conf") -> "conf/application.conf"
+    }
+  )
   .dependsOn(`hello-lagom-api`)
 
 lazy val `hello-lagom-stream-api` = (project in file("hello-lagom-stream-api"))
@@ -71,3 +82,9 @@ lazy val `hello-lagom-stream-impl` = (project in file("hello-lagom-stream-impl")
 
 //lagomKafkaZookeperPort in ThisBuild := 9999
 //lagomServicesPortRange in ThisBuild := PortRange(40000, 45000)
+
+
+//// ************** packaging option(http://www.scala-sbt.org/sbt-native-packager/archetypes/java_app/customize.html) *** //
+//bashScriptExtraDefines += """addJava "-Dconfig.file=${app_home}/../conf/application.conf""""
+//// add application parameter
+//bashScriptExtraDefines += """addApp "--port=8080"""
