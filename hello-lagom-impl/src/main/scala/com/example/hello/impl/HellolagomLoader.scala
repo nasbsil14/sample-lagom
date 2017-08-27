@@ -17,8 +17,14 @@ class HellolagomLoader extends LagomApplicationLoader {
       override def serviceLocator: ServiceLocator = NoServiceLocator
     }
 
-  override def loadDevMode(context: LagomApplicationContext): LagomApplication =
-    new HellolagomApplication(context) with LagomDevModeComponents
+  override def loadDevMode(context: LagomApplicationContext): LagomApplication = {
+    new HellolagomApplication(context) {
+      // zookeeperで連携serviceのURL管理(cassandraも含まれる模様)
+      override def serviceLocator: ServiceLocator = new HellolagomZKServiceLocator(
+        HellolagomZKServiceLocator.fromConfigurationWithPath(context.playContext.initialConfiguration))
+    }
+    //new HellolagomApplication(context) with LagomDevModeComponents
+  }
 
   override def describeService = Some(readDescriptor[HellolagomService])
 }
