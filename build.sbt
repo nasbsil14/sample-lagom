@@ -36,8 +36,8 @@ lazy val `hello-lagom-impl` = (project in file("hello-lagom-impl"))
   .settings(lagomForkedTestSettings: _*)
   .settings(
     bashScriptExtraDefines ++= Seq(
-      """addJava "-Dconfig.file=${app_home}/../conf/application.conf""""
-      //      ,"""addApp "--port=8080""""
+      """addJava "-Dconfig.file=${app_home}/../conf/application.conf"""",
+      """addJava "-Dhttp.port=8080""""
     ),
     resourceDirectory in Compile := baseDirectory.value / "src/main/resources",
     mappings in Universal += {
