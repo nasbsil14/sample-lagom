@@ -57,6 +57,7 @@ lazy val `hello-lagom-stream-impl` = (project in file("hello-lagom-stream-impl")
   .enablePlugins(LagomScala)
   .settings(
     libraryDependencies ++= Seq(
+      lagomScaladslPubSub,
       lagomScaladslTestKit,
       macwire,
       scalaTest

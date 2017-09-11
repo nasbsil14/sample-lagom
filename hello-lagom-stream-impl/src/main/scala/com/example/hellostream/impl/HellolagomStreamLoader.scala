@@ -6,6 +6,7 @@ import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import play.api.libs.ws.ahc.AhcWSComponents
 import com.example.hellostream.api.HellolagomStreamService
 import com.example.hello.api.HellolagomService
+import com.lightbend.lagom.scaladsl.pubsub.{PubSubComponents, PubSubRegistry}
 import com.softwaremill.macwire._
 
 class HellolagomStreamLoader extends LagomApplicationLoader {
@@ -23,7 +24,8 @@ class HellolagomStreamLoader extends LagomApplicationLoader {
 
 abstract class HellolagomStreamApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
-    with AhcWSComponents {
+    with AhcWSComponents
+    with PubSubComponents {
 
   // Bind the service that this server provides
   override lazy val lagomServer = serverFor[HellolagomStreamService](wire[HellolagomStreamServiceImpl])

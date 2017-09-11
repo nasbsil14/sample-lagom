@@ -46,36 +46,36 @@ class HellolagomLoader extends LagomApplicationLoader {
     }
 
   override def loadDevMode(context: LagomApplicationContext): LagomApplication = {
-    // debug log setting
-    val environment = context.playContext.environment
-    LoggerConfigurator(environment.classLoader).foreach {
-      _.configure(environment)
-    }
-
-    new HellolagomApplication(context) {
-      override def serviceLocator: ServiceLocator = new ServiceLocator {
-        lazy val devModeServiceLocatorUrl: URI = URI.create(configuration.underlying.getString("lagom.service-locator.url"))
-
-        override def doWithService[T](name: String, serviceCall: Call[_, _])(block: (URI) => Future[T])(implicit executionContext: ExecutionContext): Future[Option[T]] = {
-          if (name == ServiceRegistry.ServiceName) {
-            block(devModeServiceLocatorUrl).map(Some.apply)
-          } else {
-            Future.successful(None)
-          }
-        }
-
-        override def locate(name: String, serviceCall: Call[_, _]): Future[Option[URI]] = {
-          if (name == ServiceRegistry.ServiceName) {
-            Future.successful(Some(devModeServiceLocatorUrl))
-          } else if (name == "cas_native") {
-            Future.successful(Some(URI.create(configuration.underlying.getString("lagom.services.cas_native"))))
-          } else {
-            Future.successful(None)
-          }
-        }
-      }
-    }
-    //new HellolagomApplication(context) with LagomDevModeComponents
+//    // debug log setting
+//    val environment = context.playContext.environment
+//    LoggerConfigurator(environment.classLoader).foreach {
+//      _.configure(environment)
+//    }
+//
+//    new HellolagomApplication(context) {
+//      override def serviceLocator: ServiceLocator = new ServiceLocator {
+//        lazy val devModeServiceLocatorUrl: URI = URI.create(configuration.underlying.getString("lagom.service-locator.url"))
+//
+//        override def doWithService[T](name: String, serviceCall: Call[_, _])(block: (URI) => Future[T])(implicit executionContext: ExecutionContext): Future[Option[T]] = {
+//          if (name == ServiceRegistry.ServiceName) {
+//            block(devModeServiceLocatorUrl).map(Some.apply)
+//          } else {
+//            Future.successful(None)
+//          }
+//        }
+//
+//        override def locate(name: String, serviceCall: Call[_, _]): Future[Option[URI]] = {
+//          if (name == ServiceRegistry.ServiceName) {
+//            Future.successful(Some(devModeServiceLocatorUrl))
+//          } else if (name == "cas_native") {
+//            Future.successful(Some(URI.create(configuration.underlying.getString("lagom.services.cas_native"))))
+//          } else {
+//            Future.successful(None)
+//          }
+//        }
+//      }
+//    }
+    new HellolagomApplication(context) with LagomDevModeComponents
   }
 
   override def describeService = Some(readDescriptor[HellolagomService])
