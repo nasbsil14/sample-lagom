@@ -18,7 +18,7 @@ lazy val `hello-lagom-api` = (project in file("hello-lagom-api"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi,
-      lagomJavadslServer
+      lagomScaladslServer
     )
   )
 
