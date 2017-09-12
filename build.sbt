@@ -30,7 +30,8 @@ lazy val `hello-lagom-impl` = (project in file("hello-lagom-impl"))
       lagomScaladslKafkaBroker,
       lagomScaladslTestKit,
       macwire,
-      scalaTest
+      scalaTest,
+      filters
     )
   )
   .settings(lagomForkedTestSettings: _*)

@@ -14,6 +14,8 @@ import com.lightbend.lagom.scaladsl.api.Descriptor.Call
 import com.lightbend.lagom.scaladsl.broker.kafka.LagomKafkaComponents
 import com.softwaremill.macwire._
 import play.api.LoggerConfigurator
+import play.api.mvc.EssentialFilter
+import play.filters.cors.CORSComponents
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -85,7 +87,8 @@ abstract class HellolagomApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
     with CassandraPersistenceComponents
     with LagomKafkaComponents
-    with AhcWSComponents {
+    with AhcWSComponents
+    with CORSComponents {
 
   // Bind the service that this server provides
   override lazy val lagomServer = serverFor[HellolagomService](wire[HellolagomServiceImpl])
@@ -95,4 +98,6 @@ abstract class HellolagomApplication(context: LagomApplicationContext)
 
   // Register the hello-lagom persistent entity
   persistentEntityRegistry.register(wire[HellolagomEntity])
+
+  override lazy val httpFilters: Seq[EssentialFilter] = Seq(corsFilter)
 }

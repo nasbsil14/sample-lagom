@@ -3,8 +3,10 @@ package com.example.hello.api
 import akka.{Done, NotUsed}
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.api.broker.kafka.{KafkaProperties, PartitionKeyStrategy}
-import com.lightbend.lagom.scaladsl.api.{Service, ServiceCall}
+import com.lightbend.lagom.scaladsl.api.{Service, ServiceAcl, ServiceCall}
 import play.api.libs.json.{Format, Json}
+
+import scala.reflect.io.Streamable.Bytes
 
 object HellolagomService  {
   val TOPIC_NAME = "greetings"
@@ -30,6 +32,9 @@ trait HellolagomService extends Service {
   def useGreeting(id: String): ServiceCall[GreetingMessage, Done]
 
 
+  def images(idx: Int): ServiceCall[NotUsed, String]
+  //def images(idx: Int): ServiceCall[NotUsed, Array[Byte]]
+
   /**
     * This gets published to Kafka.
     */
@@ -41,7 +46,8 @@ trait HellolagomService extends Service {
     named("hello-lagom")
       .withCalls(
         pathCall("/api/hello/:id", hello _),
-        pathCall("/api/hello/:id", useGreeting _)
+        pathCall("/api/hello/:id", useGreeting _),
+        pathCall("/api/images/:idx", images _)
       )
       .withTopics(
         topic(HellolagomService.TOPIC_NAME, greetingsTopic _)
@@ -56,6 +62,9 @@ trait HellolagomService extends Service {
           )
       )
       .withAutoAcl(true)
+      .withAcls {
+        ServiceAcl.forPathRegex("/api/*")
+      }
     // @formatter:on
   }
 }
